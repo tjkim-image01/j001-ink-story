@@ -2,7 +2,7 @@ const picker=document.getElementById('version-picker');
 if(picker){
   picker.addEventListener('change',()=>{
     const base=new URL(picker.dataset.base,location.href);
-    location.href=new URL(picker.value==='v1'?'v1/index.html':'v2/index.html',base).href;
+    location.href=new URL(`${['v1','v2','v3'].includes(picker.value)?picker.value:'v2'}/index.html`,base).href;
   });
 }
 const settings=document.getElementById('drawing-settings');
