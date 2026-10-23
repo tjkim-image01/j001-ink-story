@@ -2,7 +2,7 @@ import * as THREE from './vendor/three.module.js';
 import {motionVertexShader} from './ending-motion.js';
 import {paperGLSL} from './paper.js';
 
-// Artistic presets, not a physical fluid solver. All inks stay monochrome.
+// Artistic presets, not a physical fluid solver. Damchae adds a pale color wash.
 export const INKS={
   crisp:{spread:.6,opacity:.04,growth:.65,mode:0,width:0,dryness:0,variation:0,surface:0},
   fountain:{spread:1.8,opacity:.16,growth:.9,mode:0,width:0,dryness:0,variation:0,surface:0},
@@ -10,6 +10,7 @@ export const INKS={
   meok:{spread:5.2,opacity:.48,growth:1.65,mode:1,width:2.6,dryness:.19,variation:.43,surface:0},
   watercolor:{spread:3.8,opacity:.34,growth:1.15,mode:2,width:2.1,dryness:.37,variation:.32,surface:0},
   sagunja:{spread:8.8,opacity:.36,growth:2.4,mode:3,width:6,dryness:.24,variation:.5,surface:1},
+  damchae:{spread:8.0,opacity:.3,growth:2.6,mode:3,width:6,dryness:.2,variation:.5,surface:1},
   charcoal:{spread:.8,opacity:.08,growth:.4,mode:4,width:4,dryness:.7,variation:.5,surface:0},
   crayon:{spread:0,opacity:0,growth:.4,mode:5,width:4,dryness:.3,variation:.2,surface:0},
 };
@@ -70,11 +71,11 @@ export function makeInkArtwork(art,strokes,rect,story,motionMask=null,brushArt=n
             body*=1.0-.56*smoothstep(.79,.98,tooth);
             body*=.9+.1*noise(cell*.22);
           }
-          float pigment=clamp(body*stamp.g,0.0,1.0);
+          vec3 pigment=vec3(clamp(body*stamp.g,0.0,1.0));
           if(mode<3.5){
             vec2 q=pageOrigin+vec2(vUv.x,1.0-vUv.y)*pageSize;
             float cue=q.x<450.0?.31:q.y>800.0?.92:q.x<650.0?.43:q.x<1020.0?.68:q.x<1420.0?.59:.83;
-            float wash=(1.0-texture2D(washArt,vUv).r)*smoothstep(cue,cue+.065,drawProgress);
+            vec3 wash=(1.0-texture2D(washArt,vUv).rgb)*smoothstep(cue,cue+.065,drawProgress);
             pigment=1.0-(1.0-pigment)*(1.0-wash);
           }
           if(characterLayer<.5)pigment*=1.0-mask*motionActive;

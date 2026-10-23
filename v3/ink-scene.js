@@ -1,7 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import { makePenPath, samplePenPath } from './pen-path.js';
 import { makeCameraPlan, cameraPose, timeAtPenProgress } from './camera-director.js';
-import { makeInkBleed, makeInkArtwork, INKS } from './ink-bleed.js';
+import { makeInkBleed, makeInkArtwork, INKS } from './ink-bleed.js?v=damchae-1';
 import {TOOLS,createDrawingTool,toolPose,applyToolPose} from './pen-tools.js';
 import {endingMotion,EndingAccents} from './ending-motion.js';
 import {paperGLSL} from './paper.js';
@@ -36,6 +36,8 @@ export class InkScene {
     const motionMask=new THREE.Texture(motionMaskImage);motionMask.colorSpace=THREE.NoColorSpace;
     motionMask.minFilter=THREE.LinearFilter;motionMask.generateMipmaps=false;motionMask.needsUpdate=true;
     const washTexture=new THREE.Texture(underpainting[1]);washTexture.colorSpace=THREE.NoColorSpace;washTexture.minFilter=THREE.LinearFilter;washTexture.generateMipmaps=false;washTexture.needsUpdate=true;
+    const colorWash=new THREE.Texture(underpainting[2]);colorWash.colorSpace=THREE.NoColorSpace;colorWash.minFilter=THREE.LinearFilter;colorWash.generateMipmaps=false;colorWash.needsUpdate=true;
+    this.washTextures={sagunja:washTexture,damchae:colorWash};
     this.papers=story.chapters.map((chapter,index)=>{
       const r=chapter.rect;
       const canvas=document.createElement('canvas');
@@ -144,7 +146,7 @@ export class InkScene {
           const profile=segmentProfile(s,s.dwell?1:t,this.inkKind);
           const born=timeAtPenProgress(this.plans[index],s.dwell?s.start/path.length:progress);
           wet.fillStyle=`rgb(${Math.round(born/this.story.chapters[index].duration*250)},255,${Math.round(profile.wetness*255)})`;
-          wet.beginPath();wet.arc(s.a.x+(s.b.x-s.a.x)*t,s.a.y+(s.b.y-s.a.y)*t,this.inkKind==='sagunja'?15:path.radius,0,Math.PI*2);wet.fill();
+          wet.beginPath();wet.arc(s.a.x+(s.b.x-s.a.x)*t,s.a.y+(s.b.y-s.a.y)*t,['sagunja','damchae'].includes(this.inkKind)?15:path.radius,0,Math.PI*2);wet.fill();
         }
       }
       ctx.stroke();
@@ -161,13 +163,14 @@ export class InkScene {
     for(const [index,paper] of this.papers.entries()){
       paper.coverMaterial.uniforms.mode.value=ink.mode;
       if(ink.mode>2.5){
-        if(kind==='sagunja'){
+        if(kind==='sagunja'||kind==='damchae'){
           const ctx=paper.brushCanvas.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(this.underpainting[0],0,0);
         }else paintBrushArtwork(paper.brushCanvas,this.paths[index],paper.rect,kind);
         paper.brushTexture.needsUpdate=true;
       }
       for(const material of [paper.bleedMaterial,paper.artworkMaterial,paper.characterMaterial]){
         for(const [name,value] of Object.entries(ink))material.uniforms[name].value=value;
+        material.uniforms.washArt.value=this.washTextures[kind]||this.washTextures.sagunja;
       }
     }
     this.ui.player.dataset.inkKind=kind;

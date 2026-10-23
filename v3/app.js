@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import { clamp, makeTimeline, locate, formatTime } from './timeline.js';
-import { InkScene } from './ink-scene.js?v=20261023-watch';
+import { InkScene } from './ink-scene.js?v=damchae-1';
 
 const $ = id => document.getElementById(id);
 const setText = (element, text) => { if (element.textContent !== text) element.textContent = text; };
@@ -18,7 +18,7 @@ async function boot() {
   const pathData = await pathResponse.json();
   const maskImage = new Image(); maskImage.src = pathData.mask; await maskImage.decode();
   const motionMask=new Image();motionMask.src='./assets/joshua-motion-mask.png';await motionMask.decode();
-  const underpainting=await Promise.all(['sumi-lines.png','sumi-wash.png'].map(async name=>{const img=new Image();img.src='./assets/'+name;await img.decode();return img;}));
+  const underpainting=await Promise.all(['sumi-lines.png','sumi-wash.png','damchae-wash.png'].map(async name=>{const img=new Image();img.src='./assets/'+name;await img.decode();return img;}));
   const view = new InkScene(story, image, maskImage, pathData, ui, reducedMotion,motionMask,underpainting);
   const lastIndex = story.chapters.length - 1;
   const timeline = makeTimeline(story.chapters, story.transitionSeconds);
@@ -181,7 +181,10 @@ async function boot() {
   });
   ui.seek.addEventListener('input', () => { started = true; ui.intro.hidden = true; seek(Number(ui.seek.value)); });
   ui.speed.addEventListener('change', () => { rate = Number(ui.speed.value); audio.playbackRate = rate; });
-  $('ink-kind').addEventListener('change',event=>view.setInkKind(event.target.value));
+  $('ink-kind').addEventListener('change',event=>{
+    if(event.target.value==='damchae'){$('pen-kind').value='sagunja';view.setPenKind('sagunja');}
+    view.setInkKind(event.target.value);update();
+  });
   $('pen-kind').addEventListener('change',event=>{
     const ink=view.setPenKind(event.target.value);
     $('ink-kind').value=ink;view.setInkKind(ink);update();
@@ -199,6 +202,9 @@ async function boot() {
   ui.scene.addEventListener('webglcontextlost', event => { event.preventDefault(); pause(); customStatus = '화면 연결이 끊겼습니다. 페이지를 새로고침해 주세요.'; });
   window.addEventListener('pagehide', () => { audio.pause(); });
   ui.player.dataset.renderer = `Three.js r${THREE.REVISION}`;
+  if(new URLSearchParams(location.search).get('ink')==='damchae'){
+    $('ink-kind').value='damchae';view.setInkKind('damchae');
+  }
   prepareAudio(0);
   update(); requestAnimationFrame(tick);
 }
