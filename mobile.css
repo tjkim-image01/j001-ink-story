@@ -1,0 +1,92 @@
+.drawing-settings { margin: 0; }
+.drawing-settings > summary { display: none; }
+.player.is-expanded { position: fixed; inset: 0; z-index: 100; width: 100%; height: 100dvh; display: flex; flex-direction: column; background: #fff; border: 0; padding-bottom: env(safe-area-inset-bottom); }
+.player.is-expanded .stage { flex: 1; height: auto; min-height: 140px; }
+.player.is-expanded .narration { width: 100%; }
+body.has-expanded-player { overflow: hidden; }
+@media (max-width: 700px) {
+  .page { padding: max(18px,env(safe-area-inset-top)) 12px calc(28px + env(safe-area-inset-bottom)); }
+  .heading { align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+  .overline { margin-bottom: 7px; font-size: 10px; }
+  h1 { font-size: clamp(24px,6.5vw,32px); }
+  .heading-options { width: 100%; display: flex; flex-direction: row; align-items: center; gap: 10px; }
+  .version-label { flex-shrink: 0; font-size: 11px; }
+  .heading-options select { flex: 1; min-width: 0; max-width: 310px; min-height: 44px; font-size: 16px; }
+  .chapters { padding: 0 12px; }
+  .chapters button { padding: 12px 2px 10px; font-size: 11px; }
+  .stage { height: clamp(200px,min(70vw,calc(100svh - 420px)),360px); min-height: 180px; }
+  .intro { padding: 18px; }
+  .intro-kicker { font-size: 10px; }
+  .intro h2 { margin: 10px 0; font-size: 25px; }
+  #load-message { font-size: 12px; margin-bottom: 18px; max-width: 280px; }
+  #start { min-height: 46px; padding: 11px 24px; font-size: 14px; }
+  .scene-note { top: 8px; left: 10px; font-size: 9px; }
+  .expand { min-height: 40px; padding: 9px; right: 6px; }
+  .narration { min-height: 132px; padding: 12px 16px 8px; }
+  .chapter-title { margin-bottom: 8px; }
+  .speakers { margin-bottom: 7px; }
+  .speakers span { font-size: 10px; padding: 3px 9px; }
+  .caption { font-size: 15px; line-height: 1.75; min-height: 78px; }
+  .timeline { padding: 0 16px; }
+  input[type="range"] { height: 32px; }
+  .timecodes { margin-top: 0; font-size: 10px; gap: 8px; }
+  #playback-status { text-align: center; }
+  .controls { padding: 14px 16px 12px; gap: 10px; }
+  .transport { width: 100%; justify-content: center; gap: 10px; }
+  .transport .primary { flex: 1; max-width: 200px; min-height: 46px; font-size: 14px; }
+  .transport .quiet { min-width: 80px; min-height: 44px; font-size: 12px; }
+  .drawing-settings { width: 100%; border-top: 1px solid #eee; padding-top: 3px; }
+  .drawing-settings > summary { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; min-height: 40px; font-size: 12px; color: #555; list-style: none; }
+  .drawing-settings > summary::-webkit-details-marker { display: none; }
+  .drawing-settings > summary::after { content: '+'; font-size: 17px; }
+  .drawing-settings[open] > summary::after { content: '−'; }
+  .preferences { display: grid; width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; padding: 4px 0 8px; }
+  .preferences select,.preferences button { width: 100%; min-width: 0; min-height: 44px; margin: 0; font-size: 16px; }
+  .preferences button { border: 1px solid #ddd; }
+  .footnote { margin-top: 1px; padding: 11px 3px; font-size: 10px; line-height: 1.7; }
+  .transcript { margin: 12px 3px 0; }
+  .transcript summary { min-height: 40px; padding-top: 10px; }
+  .player:fullscreen .narration,.player.is-expanded .narration { min-height: 100px; }
+  .player:fullscreen .caption,.player.is-expanded .caption { min-height: 52px; }
+}
+@media (max-width: 700px) and (max-height: 740px) {
+  .page { padding-top: 12px; }
+  .heading { gap: 8px; margin-bottom: 10px; }
+  .overline { font-size: 9px; margin-bottom: 4px; }
+  h1 { font-size: 24px; }
+  .stage { height: 180px; min-height: 160px; }
+  .narration { min-height: 120px; padding-top: 8px; }
+  .caption { min-height: 72px; font-size: 14px; }
+  .controls { padding-top: 10px; }
+}
+@media (max-width: 700px) and (max-height: 600px) {
+  .stage { height: 160px; }
+  .narration { min-height: 110px; }
+  .heading { margin-bottom: 8px; }
+}
+@media (max-width: 950px) and (orientation: landscape) and (max-height: 550px) {
+  .page { padding: 10px 14px 22px; }
+  .heading { flex-wrap: nowrap; align-items: center; gap: 18px; margin-bottom: 10px; }
+  .heading h1 { font-size: 24px; }
+  .overline,.reference { display: none; }
+  .heading-options { width: auto; flex-direction: row; align-items: center; }
+  .heading-options select { min-height: 40px; font-size: 14px; }
+  .player:not(:fullscreen):not(.is-expanded) { display: grid; grid-template-columns: minmax(0,1.15fr) minmax(260px,.85fr); grid-template-rows: auto auto minmax(0,1fr); }
+  .player:not(:fullscreen):not(.is-expanded) .chapters { display: none; }
+  .player:not(:fullscreen):not(.is-expanded) .stage { grid-column: 1; grid-row: 1 / span 3; height: calc(100svh - 90px); min-height: 200px; }
+  .player:not(:fullscreen):not(.is-expanded) .narration { grid-column: 2; grid-row: 1; min-height: 90px; width: 100%; padding: 12px 14px 4px; }
+  .player:not(:fullscreen):not(.is-expanded) .chapter-title { display: none; }
+  .player:not(:fullscreen):not(.is-expanded) .caption { min-height: 48px; font-size: 13px; line-height: 1.6; }
+  .player:not(:fullscreen):not(.is-expanded) .timeline { grid-column: 2; grid-row: 2; padding: 0 14px; }
+  .player:not(:fullscreen):not(.is-expanded) .controls { grid-column: 2; grid-row: 3; align-self: end; padding: 8px 14px; flex-wrap: wrap; gap: 5px; }
+  .transport { width: 100%; justify-content: center; }
+  .transport .primary { flex: 1; min-height: 44px; }
+  .drawing-settings { width: 100%; }
+  .drawing-settings > summary { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 36px; font-size: 12px; }
+  .preferences { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; max-height: 106px; overflow: auto; padding-bottom: 5px; }
+  .preferences select,.preferences button { min-width: 0; min-height: 40px; width: 100%; }
+  .player:fullscreen .chapters,.player:fullscreen .chapter-title,.player.is-expanded .chapters,.player.is-expanded .chapter-title { display: none; }
+  .player:fullscreen .narration,.player.is-expanded .narration { min-height: 64px; padding: 5px 18px; }
+  .player:fullscreen .speakers,.player.is-expanded .speakers { display: none; }
+  .player:fullscreen .caption,.player.is-expanded .caption { min-height: 36px; font-size: 13px; line-height: 1.5; }
+}
