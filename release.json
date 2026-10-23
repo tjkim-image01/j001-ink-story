@@ -1,5 +1,5 @@
 {
-  "defaultVersion": "v2",
+  "defaultVersion": "v3",
   "versions": [
     "v1",
     "v2",
@@ -7,6 +7,7 @@
   ],
   "v3DefaultTool": "sagunja",
   "v3DefaultPaper": "xuan",
+  "immersiveViewing": "landscape-with-touch-controls",
   "soundEffects": false,
   "durationSeconds": 66.99,
   "audioSha256": "9f9830854faa26fe46eec6290adb377960b76f4ec534a14acdb052e19bdc6831"

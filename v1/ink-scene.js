@@ -152,7 +152,7 @@ export class InkScene {
   }
 
   resize() {
-    const {width,height}=this.ui.stage.getBoundingClientRect(); if(!width||!height)return;
+    const {clientWidth:width,clientHeight:height}=this.ui.stage; if(!width||!height)return;
     this.renderer.setSize(width,height,false);
     const aspect=width/height;
     if(Math.abs(aspect-this.aspect)>.001){

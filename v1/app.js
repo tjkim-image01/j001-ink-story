@@ -1,6 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import { clamp, makeTimeline, locate, formatTime } from './timeline.js';
-import { InkScene } from './ink-scene.js';
+import { InkScene } from './ink-scene.js?v=20261023-watch';
 
 const $ = id => document.getElementById(id);
 const setText = (element, text) => { if (element.textContent !== text) element.textContent = text; };
@@ -28,7 +28,7 @@ async function boot() {
   ui.seek.max = timeline.total;
   ui['total-time'].textContent = formatTime(timeline.total);
   ui['load-message'].textContent = '다섯 가지 펜과 붓으로 선을 따라 그립니다. 마지막 10초는 완성된 그림 전체를 감상합니다.';
-  [...chapterButtons, ui.start, ui.play, ui.seek, ui.restart].forEach(el => el.disabled = false);
+  [...chapterButtons, ui.start, ui.play, ui.seek, ui.restart, ui.fullscreen].forEach(el => el.disabled = false);
   for (const chapter of story.chapters) {
     const section = document.createElement('section');
     const title = document.createElement('h3'); title.textContent = chapter.title; section.append(title);
@@ -185,11 +185,6 @@ async function boot() {
   ui.mute.addEventListener('click', () => {
     audio.muted = !audio.muted; ui.mute.textContent = audio.muted ? '음성 꺼짐' : '음성 켜짐'; ui.mute.setAttribute('aria-pressed', String(audio.muted));
   });
-  ui.fullscreen.addEventListener('click', async () => {
-    try { if (document.fullscreenElement) await document.exitFullscreen(); else await ui.player.requestFullscreen(); }
-    catch { customStatus = '이 브라우저에서는 전체 화면을 지원하지 않습니다.'; }
-  });
-  document.addEventListener('fullscreenchange', () => ui.fullscreen.textContent = document.fullscreenElement ? '원래 크기' : '크게 보기');
   document.addEventListener('keydown', event => {
     if (event.altKey || event.ctrlKey || event.metaKey || /INPUT|SELECT|TEXTAREA/.test(event.target.tagName)) return;
     if (event.code === 'Space' && !/BUTTON|SUMMARY/.test(event.target.tagName)) { event.preventDefault(); playing ? pause() : play(); }
